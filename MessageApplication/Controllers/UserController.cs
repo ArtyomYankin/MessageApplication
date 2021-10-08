@@ -1,13 +1,9 @@
 ﻿using MA.Data.Model;
 using MA.Service;
-using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,7 +27,7 @@ namespace MessageApplication.Controllers
         {
             var applicationUser = new User()
             {
-                
+
                 Email = user.Email,
                 Password = user.Password
             };
@@ -49,7 +45,7 @@ namespace MessageApplication.Controllers
         [HttpPost]
         [Route("Login")]
         public async Task<IActionResult> LoginUser(User model)
-        {
+         {
             var user = _userService.GetUser(model);
             if (user.Email != null)
             {

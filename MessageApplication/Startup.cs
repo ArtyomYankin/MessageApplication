@@ -1,5 +1,6 @@
 using MA.Repository;
 using MA.Service;
+using MA.Service.TaskService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,9 @@ namespace MessageApplication
         {
             services.AddControllers();
             services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
+            services.AddScoped(typeof(ITaskRepository<>), typeof(TaskRepository<>));
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITaskService, TaskService>();
 
             services.AddCors(options =>
             {
@@ -45,7 +48,8 @@ namespace MessageApplication
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x => {
+            }).AddJwtBearer(x =>
+            {
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
@@ -81,9 +85,6 @@ namespace MessageApplication
             {
                 app.UseDeveloperExceptionPage();
             }
-
-
-
 
             app.UseRouting();
             app.UseCors(MyAllowSpecificOrigins);

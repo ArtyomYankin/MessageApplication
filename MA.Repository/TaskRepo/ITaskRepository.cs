@@ -6,9 +6,12 @@ using System.Threading.Tasks;
 
 namespace MA.Repository
 {
-    public interface ITaskRepository<T>
+    public interface ITaskRepository<T> where T: TaskMessage
     {
-        Task<TaskMessage> Add(TaskMessage task);
+        void Add(T entity);
+        Task<TaskMessage> Delete(int id);
+        Task<TaskMessage> Update(int id, T entity);
+        Task<IEnumerable<TaskMessage>> GetAll();
         
     }
 }
