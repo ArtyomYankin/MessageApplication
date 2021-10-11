@@ -10,7 +10,7 @@
     {
         void AddTask(TaskMessage newTask);
         void DeleteTask(int id);
-        void UpdateTask(int id, TaskMessage updatedTask);
-        Task<IEnumerable<TaskMessage>> GetAllTaskMessages();
+        void UpdateTask(TaskMessage updatedTask);
+        Task<IEnumerable<TaskMessage>> GetAllTaskMessages(int userId);
     }
 }

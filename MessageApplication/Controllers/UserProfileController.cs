@@ -28,7 +28,8 @@ namespace MessageApplication.Controllers
             return new
             {
                 user.Email,
-                user.Password
+                user.Password,
+                user.Id
             };
         }
     }

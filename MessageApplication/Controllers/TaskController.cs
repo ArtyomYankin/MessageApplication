@@ -2,6 +2,8 @@
 {
     using MA.Data.Model;
     using MA.Service.TaskService;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Http;
     using Microsoft.AspNetCore.Mvc;
     using System;
@@ -19,28 +21,31 @@
             _taskService = taskService;
         }
         [HttpPost]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddTask(TaskMessage taskMessage)
         {
             _taskService.AddTask(taskMessage);
             return Ok();
         }
         [HttpDelete]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> DeleteTask(int id)
         {
             _taskService.DeleteTask(id);
             return Ok();
         }
         [HttpPut]
-        public async Task<IActionResult> UpdateTask(int id, TaskMessage taskMessage)
+       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateTask( TaskMessage taskMessage)
         {
-            _taskService.UpdateTask(id, taskMessage);
+            _taskService.UpdateTask(taskMessage);
             return Ok();
         }
         [HttpGet]
-        public async Task<IEnumerable<TaskMessage>> GetTaskMessages()
+        public async Task<IEnumerable<TaskMessage>> GetTaskMessages(int userId)
         {
             
-            return await _taskService.GetAllTaskMessages();
+            return await _taskService.GetAllTaskMessages(userId);
         }
     }
 }

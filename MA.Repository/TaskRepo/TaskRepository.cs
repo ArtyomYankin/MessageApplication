@@ -18,10 +18,10 @@ namespace MA.Repository
 
                 SqliteCommand command = new SqliteCommand();
                 command.Connection = connection;
-                command.CommandText = $"INSERT INTO TaskMessage (Name, Description, LastSend) VALUES ('{entity.Name}', '{entity.Description}', '{entity.LastSent}')";
+                command.CommandText = $"INSERT INTO TaskMessage (Name, Description, LastSend, ApiType, ApiParam, UserId)" +
+                    $"  VALUES ('{entity.Name}', '{entity.Description}', '{entity.LastSent}', '{entity.ApiType}'," +
+                    $" '{entity.ApiParam}', '{entity.UserId}')";
                 int number = command.ExecuteNonQuery();
-
-                Console.WriteLine($"В таблицу Task добавлено объектов: {number}");
             }
         }
 
@@ -35,14 +35,13 @@ namespace MA.Repository
                 command.Connection = connection;
                 command.CommandText = $"DELETE FROM TaskMessage WHERE Id = {id}";
                 int number = command.ExecuteNonQuery();
-                Console.WriteLine($"{number}");
             }
             return null;
         }
 
-        public async Task<IEnumerable<TaskMessage>> GetAll()
+        public async Task<IEnumerable<TaskMessage>> GetAll(int entityId)
         {
-            string sqlExpression = "SELECT * FROM TaskMessage";
+            string sqlExpression = $"SELECT * FROM TaskMessage WHERE UserId={entityId}";
             List<TaskMessage> taskMessages = new List<TaskMessage>();
 
             using (var connection = new SqliteConnection($"Data Source={DbPath}"))
@@ -58,10 +57,12 @@ namespace MA.Repository
                         {
                             var taskMessage = new TaskMessage()
                             {
-                                Id =  Convert.ToInt32(reader.GetValue(0)),
+                                Id = Convert.ToInt32(reader.GetValue(0)),
                                 Name = (string)reader.GetValue(1),
                                 Description = (string)reader.GetValue(2),
-                                LastSent = Convert.ToDateTime(reader.GetValue(3))
+                                LastSent = Convert.ToDateTime(reader.GetValue(3)),
+                                ApiType = reader.GetString(4),
+                                ApiParam = reader.GetString(5)
                             };
                             taskMessages.Add(taskMessage);
                         }
@@ -71,7 +72,7 @@ namespace MA.Repository
             return taskMessages;
         }
     
-        public Task<TaskMessage> Update(int id, T entity)
+        public Task<TaskMessage> Update(T entity)
         {
             using (var connection = new SqliteConnection($"Data Source={DbPath}"))
             {
@@ -79,9 +80,11 @@ namespace MA.Repository
 
                 SqliteCommand command = new SqliteCommand();
                 command.Connection = connection;
-                command.CommandText = $"UPDATE TaskMessage SET Name = '{entity.Name}', Description = '{entity.Description}' WHERE Id = {id}";
+                command.CommandText = $"" +
+                    $"UPDATE TaskMessage SET Name = '{entity.Name}'," +
+                    $" Description = '{entity.Description}'," +
+                    $" ApiType='{entity.ApiType}', ApiParam='{entity.ApiParam}'  WHERE Id = {entity.Id}";
                 int number = command.ExecuteNonQuery();
-                Console.WriteLine($"{number}");
             }
             return null;
         }

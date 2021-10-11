@@ -10,8 +10,8 @@ namespace MA.Repository
     {
         void Add(T entity);
         Task<TaskMessage> Delete(int id);
-        Task<TaskMessage> Update(int id, T entity);
-        Task<IEnumerable<TaskMessage>> GetAll();
+        Task<TaskMessage> Update(T entity);
+        Task<IEnumerable<TaskMessage>> GetAll(int entityId);
         
     }
 }

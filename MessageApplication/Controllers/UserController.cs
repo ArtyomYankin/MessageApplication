@@ -27,7 +27,6 @@ namespace MessageApplication.Controllers
         {
             var applicationUser = new User()
             {
-
                 Email = user.Email,
                 Password = user.Password
             };

@@ -24,14 +24,14 @@
             _taskRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<TaskMessage>> GetAllTaskMessages()
+        public async Task<IEnumerable<TaskMessage>> GetAllTaskMessages(int userId)
         {
-            return await _taskRepository.GetAll();
+            return await _taskRepository.GetAll(userId);
         }
 
-        public void UpdateTask(int id, TaskMessage updatedTask)
+        public void UpdateTask(TaskMessage updatedTask)
         {
-            _taskRepository.Update(id, updatedTask);
+            _taskRepository.Update(updatedTask);
         }
     }
 }
