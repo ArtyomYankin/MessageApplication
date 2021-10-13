@@ -1,5 +1,7 @@
 using MA.Repository;
 using MA.Service;
+using MA.Service.ApiService;
+using MA.Service.InitService;
 using MA.Service.TaskService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -22,17 +24,18 @@ namespace MessageApplication
         {
             Configuration = configuration;
         }
-
         readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
+            //InitMailStart.StartMessaging();
             services.AddControllers();
             services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
             services.AddScoped(typeof(ITaskRepository<>), typeof(TaskRepository<>));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<IApiService, ApiService>();
+            services.AddScoped<IInitOnStart, InitOnStart>();
 
             services.AddCors(options =>
             {

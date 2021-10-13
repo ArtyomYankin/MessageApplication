@@ -1,6 +1,8 @@
 ﻿namespace MessageApplication.Controllers
 {
     using MA.Data.Model;
+    using MA.Service.ApiService;
+    using MA.Service.InitService;
     using MA.Service.TaskService;
     using Microsoft.AspNetCore.Authentication.JwtBearer;
     using Microsoft.AspNetCore.Authorization;
@@ -16,9 +18,13 @@
     public class TaskController : ControllerBase
     {
         private readonly ITaskService _taskService;
-        public TaskController(ITaskService taskService)
+        private readonly IApiService _apiService;
+        private readonly IInitOnStart _initOnStart;
+        public TaskController(ITaskService taskService, IApiService apiService, IInitOnStart initOnStart)
         {
             _taskService = taskService;
+            _apiService = apiService;
+            _initOnStart = initOnStart;
         }
         [HttpPost]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -35,7 +41,7 @@
             return Ok();
         }
         [HttpPut]
-       // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateTask( TaskMessage taskMessage)
         {
             _taskService.UpdateTask(taskMessage);
@@ -45,7 +51,14 @@
         public async Task<IEnumerable<TaskMessage>> GetTaskMessages(int userId)
         {
             
-            return await _taskService.GetAllTaskMessages(userId);
+            return await _taskService.GetAllTaskMessagesById(userId);
+        }
+        [HttpGet]
+        [Route("Weather")]
+        public async Task<Main> GetWeatherForecast()
+        {
+            await _initOnStart.GetAllTaskMessagesWithReceiver();
+            return null; // await _apiService.GetWeatherAsync();
         }
     }
 }

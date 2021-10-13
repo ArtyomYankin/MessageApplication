@@ -11,7 +11,8 @@ namespace MA.Repository
         void Add(T entity);
         Task<TaskMessage> Delete(int id);
         Task<TaskMessage> Update(T entity);
-        Task<IEnumerable<TaskMessage>> GetAll(int entityId);
-        
+        Task<IEnumerable<TaskMessage>> GetAllById(int entityId);
+        Task<IEnumerable<UserWithTasks>> GetAllTasksWithReceiver();
+
     }
 }

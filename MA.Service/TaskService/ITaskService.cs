@@ -11,6 +11,7 @@
         void AddTask(TaskMessage newTask);
         void DeleteTask(int id);
         void UpdateTask(TaskMessage updatedTask);
-        Task<IEnumerable<TaskMessage>> GetAllTaskMessages(int userId);
+        Task<IEnumerable<TaskMessage>> GetAllTaskMessagesById(int userId);
+        Task<IEnumerable<UserWithTasks>> GetAllTaskMessagesWithReceiver();
     }
 }

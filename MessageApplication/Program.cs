@@ -1,5 +1,7 @@
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace MessageApplication
 {
@@ -7,6 +9,7 @@ namespace MessageApplication
     {
         public static void Main(string[] args)
         {
+          
             CreateHostBuilder(args).Build().Run();
         }
 

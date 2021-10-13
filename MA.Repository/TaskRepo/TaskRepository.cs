@@ -18,10 +18,8 @@ namespace MA.Repository
 
                 SqliteCommand command = new SqliteCommand();
                 command.Connection = connection;
-                command.CommandText = $"INSERT INTO TaskMessage (Name, Description, LastSend, ApiType, ApiParam, UserId)" +
-                    $"  VALUES ('{entity.Name}', '{entity.Description}', '{entity.LastSent}', '{entity.ApiType}'," +
-                    $" '{entity.ApiParam}', '{entity.UserId}')";
-                int number = command.ExecuteNonQuery();
+                command.CommandText = $"INSERT INTO TaskMessage (Name, Description, LastSend, ApiType, ApiParam, UserId, FirstSend, Pereodicity) VALUES ('{entity.Name}', '{entity.Description}', '{entity.LastSent}', '{entity.ApiType}', '{entity.ApiParam}', '{entity.UserId}', '{entity.FirstSend}', '{entity.Pereodicity}')";
+                    int number = command.ExecuteNonQuery();
             }
         }
 
@@ -39,7 +37,39 @@ namespace MA.Repository
             return null;
         }
 
-        public async Task<IEnumerable<TaskMessage>> GetAll(int entityId)
+        public async Task<IEnumerable<UserWithTasks>> GetAllTasksWithReceiver()
+        {
+            string sqlExpression = $"SELECT User.Email, TaskMessage.ApiType, TaskMessage.ApiParam, TaskMessage.FirstSend, TaskMessage.Pereodicity FROM TaskMessage INNER JOIN User ON TaskMessage.UserId=User.Id; ";
+            List<UserWithTasks> usersWithTasks = new List<UserWithTasks>();
+
+            using (var connection = new SqliteConnection($"Data Source={DbPath}"))
+            {
+                connection.Open();
+
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            var userWithTasks = new UserWithTasks()
+                            {
+                                Email = reader.GetString(0),
+                                ApiType = reader.GetString(1),
+                                ApiParam = reader.GetString(2),
+                                FirstSend = reader.GetDateTime(3),
+                                Pereodicity = reader.GetInt32(4)
+                            };
+                            usersWithTasks.Add(userWithTasks);
+                        }
+                    }
+                }
+            }
+            return usersWithTasks;
+        }
+
+        public async Task<IEnumerable<TaskMessage>> GetAllById(int entityId)
         {
             string sqlExpression = $"SELECT * FROM TaskMessage WHERE UserId={entityId}";
             List<TaskMessage> taskMessages = new List<TaskMessage>();

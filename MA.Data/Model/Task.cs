@@ -14,6 +14,7 @@ namespace MA.Data.Model
         public string ApiType { get; set; }
         public string ApiParam { get; set; }
         public int UserId { get; set; }
+        public int Pereodicity { get; set; }
 
     }
 }

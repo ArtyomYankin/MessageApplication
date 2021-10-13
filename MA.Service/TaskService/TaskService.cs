@@ -24,9 +24,14 @@
             _taskRepository.Delete(id);
         }
 
-        public async Task<IEnumerable<TaskMessage>> GetAllTaskMessages(int userId)
+        public async Task<IEnumerable<UserWithTasks>> GetAllTaskMessagesWithReceiver()
         {
-            return await _taskRepository.GetAll(userId);
+            return await _taskRepository.GetAllTasksWithReceiver();
+        }
+
+        public async Task<IEnumerable<TaskMessage>> GetAllTaskMessagesById(int userId)
+        {
+            return await _taskRepository.GetAllById(userId);
         }
 
         public void UpdateTask(TaskMessage updatedTask)
