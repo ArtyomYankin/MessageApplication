@@ -10,7 +10,7 @@
         public string Email { get; set; }
         public string ApiType { get; set; }
         public string ApiParam { get; set; }
-        public DateTime FirstSend { get; set; }
+        public string FirstSend { get; set; }
         public int Pereodicity { get; set; }
     }
 }

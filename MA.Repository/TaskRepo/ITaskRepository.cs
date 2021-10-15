@@ -13,6 +13,7 @@ namespace MA.Repository
         Task<TaskMessage> Update(T entity);
         Task<IEnumerable<TaskMessage>> GetAllById(int entityId);
         Task<IEnumerable<UserWithTasks>> GetAllTasksWithReceiver();
+        void UpdateTime();
 
     }
 }

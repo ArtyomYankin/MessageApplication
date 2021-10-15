@@ -11,5 +11,6 @@ namespace MA.Service
         Task<User> AddUser(User user);
         User GetUser(User user);
         Task<User> GetById(string id);
+        Task<string> HashPassword(string password);
     }
 }

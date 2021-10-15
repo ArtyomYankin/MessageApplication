@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,6 @@ namespace MessageApplication.Controllers
         }
         [HttpPost]
         [Route("Register")]
-        //POST : /api/User/Register
         public async Task<Object> PostApplicationUser(User user)
         {
             var applicationUser = new User()
@@ -31,6 +31,7 @@ namespace MessageApplication.Controllers
                 Password = user.Password
             };
 
+           
             try
             {
                 var result = await _userService.AddUser(applicationUser);
@@ -40,6 +41,14 @@ namespace MessageApplication.Controllers
             {
                 throw ex;
             }
+        }
+        public string ComputeHash(string input, HashAlgorithm algorithm)
+        {
+            Byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+
+            Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
+
+            return BitConverter.ToString(hashedBytes);
         }
         [HttpPost]
         [Route("Login")]

@@ -2,6 +2,7 @@
 using MA.Repository;
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,19 @@ namespace MA.Service
         {
             var userToGet = _loginRepository.Get(user);
             return userToGet;
+        }
+
+        public async Task<string> HashPassword(string password)
+        {
+            HashAlgorithm algorithm = new SHA256CryptoServiceProvider();
+
+
+            Byte[] inputBytes = Encoding.UTF8.GetBytes(password);
+
+            Byte[] hashedBytes = algorithm.ComputeHash(inputBytes);
+
+            return BitConverter.ToString(hashedBytes);
+
         }
     }
 }

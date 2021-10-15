@@ -15,21 +15,22 @@
         {
             IScheduler scheduler = await StdSchedulerFactory.GetDefaultScheduler();
             await scheduler.Start();
-            
+
+            DateTime now = Convert.ToDateTime(task.FirstSend);
             JobDataMap m = new JobDataMap();
             m.Put("KeyTask", task);
             int c = 0;
             IJobDetail job = JobBuilder.Create<EmailSender>().UsingJobData(m).Build();
             
-            ITrigger trigger = TriggerBuilder.Create()  // создаем триггер
-                    // идентифицируем триггер с именем и группой
-                .StartNow()                            // запуск сразу после начала выполнения
-                .WithSimpleSchedule(x => x            // настраиваем выполнение действия
-                    .WithIntervalInHours(1)          // через 1 минуту
-                    .RepeatForever())                   // бесконечное повторение
-                .Build();                               // создаем триггер
+            ITrigger trigger = TriggerBuilder.Create() 
+                    
+                .StartAt(now)                          
+                .WithSimpleSchedule(x => x            
+                    .WithIntervalInHours(task.Pereodicity)          
+                    .RepeatForever())                  
+                .Build();                               
             c++;
-            await scheduler.ScheduleJob(job, trigger);        // начинаем выполнение работы
+            await scheduler.ScheduleJob(job, trigger);        
         }
     }
 }

@@ -9,8 +9,8 @@ namespace MA.Data.Model
         public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime FirstSend { get; set; }
-        public DateTime LastSent { get; set; }
+        public string FirstSend { get; set; }
+        public string LastSent { get; set; }
         public string ApiType { get; set; }
         public string ApiParam { get; set; }
         public int UserId { get; set; }

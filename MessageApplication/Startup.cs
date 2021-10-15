@@ -20,31 +20,23 @@ namespace MessageApplication
     {
 
         private readonly string JwtSecret = Environment.GetEnvironmentVariable("JWT_Secret");
+        
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
-            //InitMailStart.StartMessaging();
+            ShedulerStart.Start();
             services.AddControllers();
             services.AddScoped(typeof(IUserRepository<>), typeof(UserRepository<>));
             services.AddScoped(typeof(ITaskRepository<>), typeof(TaskRepository<>));
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITaskService, TaskService>();
-            services.AddScoped<IApiService, ApiService>();
             services.AddScoped<IInitOnStart, InitOnStart>();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                    builder =>
-                {
-                    builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod().SetIsOriginAllowed((host) => true);
-                });
-            });
+            services.AddCors();
             var key = Encoding.UTF8.GetBytes(JwtSecret);
             services.AddAuthentication(x =>
             {
@@ -90,7 +82,7 @@ namespace MessageApplication
             }
 
             app.UseRouting();
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors(optoins=> optoins.WithOrigins(Environment.GetEnvironmentVariable("Client_Url")).AllowAnyHeader().AllowAnyMethod());
             app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {

@@ -2,9 +2,7 @@
 {
     using MA.Data.Model;
     using MA.Repository;
-    using System;
     using System.Collections.Generic;
-    using System.Text;
     using System.Threading.Tasks;
 
     public class TaskService : ITaskService
@@ -31,12 +29,18 @@
 
         public async Task<IEnumerable<TaskMessage>> GetAllTaskMessagesById(int userId)
         {
+            
             return await _taskRepository.GetAllById(userId);
         }
 
-        public void UpdateTask(TaskMessage updatedTask)
+        public async void UpdateTask(TaskMessage updatedTask)
         {
             _taskRepository.Update(updatedTask);
+        }
+
+        public void UpdateLastSent()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

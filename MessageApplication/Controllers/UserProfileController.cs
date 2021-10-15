@@ -20,7 +20,6 @@ namespace MessageApplication.Controllers
 
         [HttpGet]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        //GET : /api/UserProfile
         public async Task<Object> GetUserProfile()
         {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;

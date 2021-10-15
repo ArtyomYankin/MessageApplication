@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace MA.Repository
 {
-    public class UserRepository<T> : IUserRepository<T> where T: User
+    public class UserRepository<T> : IUserRepository<T> where T : User
     {
         private readonly string DbPath = Environment.GetEnvironmentVariable("Db_Path");
         public void Add(T entity)
@@ -52,39 +52,39 @@ namespace MA.Repository
                     Email = UserEmail,
                     Password = UserPassword
                 };
-               
+
                 return user;
             }
-            
+
         }
 
         public async Task<User> GetById(string id)
         {
+            string sqlExpression = $"SELECT * FROM User WHERE Id=\"{id}\"";
+            User user = new User();
             using (var connection = new SqliteConnection($"Data Source={DbPath}"))
             {
                 connection.Open();
 
-                SqliteCommand commandId = new SqliteCommand();
-                SqliteCommand commandEmail = new SqliteCommand();
-                SqliteCommand commandPassword = new SqliteCommand();
-                commandId.Connection = connection;
-                commandPassword.Connection = connection;
-                commandEmail.Connection = connection;
-                commandId.CommandText = $"SELECT Id FROM User WHERE Id=\"{id}\"";
-                commandEmail.CommandText = $"SELECT Email FROM User WHERE Id=\"{id}\"";
-                commandPassword.CommandText = $"SELECT Password FROM User WHERE Id=\"{id}\"";
-                int UserId = Convert.ToInt32(commandId.ExecuteScalar());
-                string UserEmail =  (string)commandEmail.ExecuteScalar();
-                string UserPassword = (string)commandPassword.ExecuteScalar();
-                var user = new User()
+                SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+                using (SqliteDataReader reader = command.ExecuteReader())
                 {
-                    Id = UserId,
-                    Email = UserEmail,
-                    Password = UserPassword
-                };
-
-                return user;
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            user = new User()
+                            {
+                                Id = reader.GetInt32(0),
+                                Email = reader.GetString(1),
+                                Password = reader.GetString(2)
+                            };
+                        }
+                    }
+                }
+                
             }
+            return user;
         }
     }
 }

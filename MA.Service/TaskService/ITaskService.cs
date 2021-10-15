@@ -13,5 +13,6 @@
         void UpdateTask(TaskMessage updatedTask);
         Task<IEnumerable<TaskMessage>> GetAllTaskMessagesById(int userId);
         Task<IEnumerable<UserWithTasks>> GetAllTaskMessagesWithReceiver();
+        void UpdateLastSent();
     }
 }

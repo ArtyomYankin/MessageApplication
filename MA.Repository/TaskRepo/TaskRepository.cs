@@ -39,7 +39,7 @@ namespace MA.Repository
 
         public async Task<IEnumerable<UserWithTasks>> GetAllTasksWithReceiver()
         {
-            string sqlExpression = $"SELECT User.Email, TaskMessage.ApiType, TaskMessage.ApiParam, TaskMessage.FirstSend, TaskMessage.Pereodicity FROM TaskMessage INNER JOIN User ON TaskMessage.UserId=User.Id; ";
+            string sqlExpression = $"SELECT User.Email, TaskMessage.ApiType, TaskMessage.ApiParam, TaskMessage.FirstSend, TaskMessage.Pereodicity, User.Id FROM TaskMessage INNER JOIN User ON TaskMessage.UserId=User.Id; ";
             List<UserWithTasks> usersWithTasks = new List<UserWithTasks>();
 
             using (var connection = new SqliteConnection($"Data Source={DbPath}"))
@@ -58,8 +58,9 @@ namespace MA.Repository
                                 Email = reader.GetString(0),
                                 ApiType = reader.GetString(1),
                                 ApiParam = reader.GetString(2),
-                                FirstSend = reader.GetDateTime(3),
-                                Pereodicity = reader.GetInt32(4)
+                                FirstSend = reader.GetString(3),
+                                Pereodicity = reader.GetInt32(4),
+                                Id = reader.GetInt32(5)
                             };
                             usersWithTasks.Add(userWithTasks);
                         }
@@ -87,13 +88,15 @@ namespace MA.Repository
                         {
                             var taskMessage = new TaskMessage()
                             {
-                                Id = Convert.ToInt32(reader.GetValue(0)),
-                                Name = (string)reader.GetValue(1),
-                                Description = (string)reader.GetValue(2),
-                                LastSent = Convert.ToDateTime(reader.GetValue(3)),
+                                Id = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                                Description = reader.GetString(2),
+                                LastSent = reader.GetString(3),
                                 ApiType = reader.GetString(4),
                                 ApiParam = reader.GetString(5)
+                                
                             };
+                            
                             taskMessages.Add(taskMessage);
                         }
                     }
@@ -117,6 +120,11 @@ namespace MA.Repository
                 int number = command.ExecuteNonQuery();
             }
             return null;
+        }
+
+        public void UpdateTime()
+        {
+            throw new NotImplementedException();
         }
     }
 }
